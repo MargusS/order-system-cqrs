@@ -10,8 +10,12 @@ spring:
   kafka:
     bootstrap-servers: localhost:9094
     consumer:
-      group-id: orders-group
+      group-id: query-service-group
+      auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        "[spring.json.trusted.packages]": "*"
+        "[spring.json.type.mapping]": "product.created:order.system.cqrs.queryservice.events.ProductCreatedEvent, order.created:order.system.cqrs.queryservice.events.OrderCreatedEvent"
 server:
   port: 8081

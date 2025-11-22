@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update # para que JPA cree/actualice tablas automáticamente
+      ddl-auto: create # para que JPA cree/actualice tablas automáticamente
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -19,18 +19,19 @@ spring:
     init:
       mode: always
 
-  # Opcional: mostrar las consultas SQL en consola (útil para debugging)
   jpa.show-sql: false
-  jpa.properties.hibernate.format_sql: false
 
   kafka:
     bootstrap-servers: localhost:9094 # Dirección del broker Kafka
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        "[spring.json.type.mapping]": "product.created:order.system.cqrs.commandservice.events.ProductCreatedEvent, order.created:order.system.cqrs.commandservice.events.OrderCreatedEvent"
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonSerializer
       group-id: orders-group
+
 server:
   port: 8080
