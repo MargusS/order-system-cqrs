@@ -1,6 +1,11 @@
 spring:
   application:
     name: Query Service
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: query_service_db
 
   kafka:
     bootstrap-servers: localhost:9094
