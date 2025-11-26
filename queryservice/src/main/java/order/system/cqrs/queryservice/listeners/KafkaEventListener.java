@@ -33,7 +33,10 @@ public class KafkaEventListener {
 	public void handleProductCreated(ProductCreatedEvent event) {
 		System.out.println(">>> Received Product Event: " + event.getId());
 
-		ProductReadModel product = new ProductReadModel();
+		//Check if product already exists
+		ProductReadModel product = productRepository.findByProductId(event.getId())
+				.orElse(new ProductReadModel());
+
 		// We use the ID coming from the event (the UUID string) as our business key
 		product.setProductId(event.getId());
 		product.setName(event.getName());
@@ -51,25 +54,20 @@ public class KafkaEventListener {
 	public void handleOrderCreated(OrderCreatedEvent event) {
 		System.out.println(">>> Received Order Event: " + event.getId());
 
-		OrderReadModel order = new OrderReadModel();
+		//Check if order already exists
+		OrderReadModel order = orderRepository.findByOrderId(event.getId())
+				.orElse(new OrderReadModel());
+
 		order.setOrderId(event.getId());
 		order.setStatus(event.getStatus());
 		order.setCreatedAt(event.getCreatedAt());
 
-		// Map items. Notice we might miss product names here if we don't look them up,
-		// but for now we map what comes in the event.
-		// Ideally, the event should carry enough info, or we fetch product details from
-		// our local Mongo DB.
-		// For this simple step, let's just map the IDs and quantity.
 		if (event.getItems() != null) {
 			order.setItems(event.getItems().stream().map(itemDto -> {
 				OrderItemReadModel item = new OrderItemReadModel();
 				item.setProductId(itemDto.getProductId());
 				item.setQuantity(itemDto.getQuantity());
 				item.setPrice(itemDto.getPrice());
-				// item.setProductName(...) -> In a real app, you might look this up in
-				// productRepository
-				// using the productId to enrich the read model.
 				return item;
 			}).collect(Collectors.toList()));
 		}
