@@ -4,13 +4,13 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:5432/command_service_db
-    username: margus
-    password: margus123
+    username: margus 				#Should use env variables or secret management
+    password: margus123 		#Should use env variables or secret management
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create # para que JPA cree/actualice tablas automáticamente
+      ddl-auto: update 
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -22,7 +22,7 @@ spring:
   jpa.show-sql: false
 
   kafka:
-    bootstrap-servers: localhost:9094 # Dirección del broker Kafka
+    bootstrap-servers: localhost:9094 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
