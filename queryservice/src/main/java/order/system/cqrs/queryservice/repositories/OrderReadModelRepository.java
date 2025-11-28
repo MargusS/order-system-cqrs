@@ -9,9 +9,7 @@ import order.system.cqrs.queryservice.entities.OrderReadModel;
 
 public interface OrderReadModelRepository extends MongoRepository<OrderReadModel, String> {
 
-	// Find order by its business ID (the UUID string coming from Command Service)
 	Optional<OrderReadModel> findByOrderId(String orderId);
 
-	// Example: Find all orders with a specific status
 	List<OrderReadModel> findByStatus(String status);
 }

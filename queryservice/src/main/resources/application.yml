@@ -16,6 +16,6 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         "[spring.json.trusted.packages]": "*"
-        "[spring.json.type.mapping]": "product.created:order.system.cqrs.queryservice.events.ProductCreatedEvent, order.created:order.system.cqrs.queryservice.events.OrderCreatedEvent"
+        "[spring.json.type.mapping]": "product.created:order.system.cqrs.queryservice.events.ProductCreatedEvent,order.created:order.system.cqrs.queryservice.events.OrderCreatedEvent,product.price.changed:order.system.cqrs.queryservice.events.ProductPriceChangedEvent,product.deactivated:order.system.cqrs.queryservice.events.ProductDeactivatedEvent"
 server:
   port: 8081

@@ -7,44 +7,18 @@ import org.springframework.stereotype.Service;
 
 import order.system.cqrs.queryservice.entities.OrderItemReadModel;
 import order.system.cqrs.queryservice.entities.OrderReadModel;
-import order.system.cqrs.queryservice.entities.ProductReadModel;
 import order.system.cqrs.queryservice.events.OrderCreatedEvent;
-import order.system.cqrs.queryservice.events.ProductCreatedEvent;
 import order.system.cqrs.queryservice.repositories.OrderReadModelRepository;
 import order.system.cqrs.queryservice.repositories.ProductReadModelRepository;
 
 @Service
-public class KafkaEventListener {
+public class OrderEventListener {
 
-	private final ProductReadModelRepository productRepository;
 	private final OrderReadModelRepository orderRepository;
 
-	public KafkaEventListener(ProductReadModelRepository productRepository,
+	public OrderEventListener(ProductReadModelRepository productRepository,
 			OrderReadModelRepository orderRepository) {
-		this.productRepository = productRepository;
 		this.orderRepository = orderRepository;
-	}
-
-	/**
-	 * Listener for Product events.
-	 * When a ProductCreatedEvent is received, we save it to MongoDB.
-	 */
-	@KafkaListener(topics = "product-events", groupId = "query-service-group")
-	public void handleProductCreated(ProductCreatedEvent event) {
-		System.out.println(">>> Received Product Event: " + event.getId());
-
-		//Check if product already exists
-		ProductReadModel product = productRepository.findByProductId(event.getId())
-				.orElse(new ProductReadModel());
-
-		// We use the ID coming from the event (the UUID string) as our business key
-		product.setProductId(event.getId());
-		product.setName(event.getName());
-		product.setDescription(event.getDescription());
-		product.setPrice(event.getPrice());
-
-		productRepository.save(product);
-		System.out.println(">>> Product saved to MongoDB: " + product.getName());
 	}
 
 	/**
@@ -54,7 +28,7 @@ public class KafkaEventListener {
 	public void handleOrderCreated(OrderCreatedEvent event) {
 		System.out.println(">>> Received Order Event: " + event.getId());
 
-		//Check if order already exists
+		// Check if order already exists
 		OrderReadModel order = orderRepository.findByOrderId(event.getId())
 				.orElse(new OrderReadModel());
 

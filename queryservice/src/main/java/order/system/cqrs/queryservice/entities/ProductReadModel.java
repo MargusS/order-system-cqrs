@@ -20,4 +20,5 @@ public class ProductReadModel {
 	private String name;
 	private String description;
 	private BigDecimal price;
+	private Boolean isActive;
 }

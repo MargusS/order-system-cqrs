@@ -6,13 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data // Getters, Setters, toString, etc.
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductCreatedEvent {
+public class ProductPriceChangedEvent {
 	private String id;
-	private String name;
-	private String description;
-	private BigDecimal price;
-	private Boolean isActive;
+	private BigDecimal oldPrice;
+	private BigDecimal newPrice;
 }
