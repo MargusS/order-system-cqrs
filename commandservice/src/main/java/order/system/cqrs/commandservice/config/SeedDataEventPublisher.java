@@ -14,7 +14,8 @@ import order.system.cqrs.commandservice.entities.InitializationLog;
 import order.system.cqrs.commandservice.events.OrderCreatedEvent;
 import order.system.cqrs.commandservice.events.ProductCreatedEvent;
 import order.system.cqrs.commandservice.events.dto.OrderItemEventDto;
-import order.system.cqrs.commandservice.publishers.EventPublisher;
+import order.system.cqrs.commandservice.publishers.OrderEventPublisher;
+import order.system.cqrs.commandservice.publishers.ProductEventPublisher;
 import order.system.cqrs.commandservice.repositories.InitializationLogRepository;
 import order.system.cqrs.commandservice.repositories.OrderRepository;
 import order.system.cqrs.commandservice.repositories.ProductRepository;
@@ -25,17 +26,20 @@ public class SeedDataEventPublisher {
 	private static final String SEED_TASK_NAME = "INITIAL_SEED_DATA_V1";
 	private final ProductRepository productRepository;
 	private final OrderRepository orderRepository;
-	private final EventPublisher eventPublisher;
+	private final OrderEventPublisher orderEventPublisher;
+	private final ProductEventPublisher productEventPublisher;
 	private final InitializationLogRepository initializationLogRepository;
 
 	// Dependency Injection via constructor
 	public SeedDataEventPublisher(ProductRepository productRepository,
 			OrderRepository orderRepository,
-			EventPublisher eventPublisher,
+			OrderEventPublisher orderEventPublisher,
+			ProductEventPublisher productEventPublisher,
 			InitializationLogRepository initializationLogRepository) {
 		this.productRepository = productRepository;
 		this.orderRepository = orderRepository;
-		this.eventPublisher = eventPublisher;
+		this.orderEventPublisher = orderEventPublisher;
+		this.productEventPublisher = productEventPublisher;
 		this.initializationLogRepository = initializationLogRepository;
 	}
 
@@ -67,7 +71,7 @@ public class SeedDataEventPublisher {
 					new BigDecimal(product.getPrice()));
 
 			// Publish the event to Kafka
-			eventPublisher.publishProductCreated(event);
+			productEventPublisher.publishProductCreated(event);
 		});
 
 		System.out.println(">>> PRODUCTS PUBLISHED >>>");
@@ -91,7 +95,7 @@ public class SeedDataEventPublisher {
 					itemDtoList);
 
 			// Publish the event to Kafka
-			eventPublisher.publishOrderCreated(event);
+			orderEventPublisher.publishOrderCreated(event);
 		});
 		System.out.println(">>> ORDERS PUBLISHED >>>");
 
