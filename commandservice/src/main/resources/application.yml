@@ -27,7 +27,7 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
       properties:
-        "[spring.json.type.mapping]": "product.created:order.system.cqrs.commandservice.events.ProductCreatedEvent, order.created:order.system.cqrs.commandservice.events.OrderCreatedEvent"
+        "[spring.json.type.mapping]": "product.created:order.system.cqrs.commandservice.events.ProductCreatedEvent,order.created:order.system.cqrs.commandservice.events.OrderCreatedEvent,product.price.changed:order.system.cqrs.commandservice.events.ProductPriceChangedEvent, product.deactivated:order.system.cqrs.commandservice.events.ProductDeactivatedEvent"
     consumer:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonSerializer

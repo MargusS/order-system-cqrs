@@ -4,8 +4,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import order.system.cqrs.commandservice.events.ProductCreatedEvent;
-import order.system.cqrs.commandservice.events.dto.ProductDeactivatedEvent;
-import order.system.cqrs.commandservice.events.dto.ProductPriceChangedEvent;
+import order.system.cqrs.commandservice.events.ProductDeactivatedEvent;
+import order.system.cqrs.commandservice.events.ProductPriceChangedEvent;
 
 @Service
 public class ProductEventPublisher {

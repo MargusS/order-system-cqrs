@@ -11,8 +11,8 @@ import order.system.cqrs.commandservice.controllers.request.UpdateProductPriceRe
 import order.system.cqrs.commandservice.controllers.response.ProductResponse;
 import order.system.cqrs.commandservice.entities.Product;
 import order.system.cqrs.commandservice.events.ProductCreatedEvent;
-import order.system.cqrs.commandservice.events.dto.ProductDeactivatedEvent;
-import order.system.cqrs.commandservice.events.dto.ProductPriceChangedEvent;
+import order.system.cqrs.commandservice.events.ProductDeactivatedEvent;
+import order.system.cqrs.commandservice.events.ProductPriceChangedEvent;
 import order.system.cqrs.commandservice.publishers.ProductEventPublisher;
 import order.system.cqrs.commandservice.repositories.ProductRepository;
 
@@ -53,7 +53,8 @@ public class ProductCommandService {
 				savedProduct.getId().toString(),
 				savedProduct.getName(),
 				savedProduct.getDescription(),
-				BigDecimal.valueOf(savedProduct.getPrice()));
+				BigDecimal.valueOf(savedProduct.getPrice()),
+				savedProduct.getActive());
 		eventPublisher.publishProductCreated(event);
 
 		// 5. Return DTO

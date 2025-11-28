@@ -68,7 +68,8 @@ public class SeedDataEventPublisher {
 					product.getId().toString(),
 					product.getName(),
 					product.getDescription(),
-					new BigDecimal(product.getPrice()));
+					new BigDecimal(product.getPrice()),
+					product.getActive());
 
 			// Publish the event to Kafka
 			productEventPublisher.publishProductCreated(event);

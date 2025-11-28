@@ -1,4 +1,4 @@
-package order.system.cqrs.commandservice.events.dto;
+package order.system.cqrs.commandservice.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
