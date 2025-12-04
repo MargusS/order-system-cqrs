@@ -58,7 +58,6 @@ public class OrderMapper {
         return items.stream()
             .map(item -> {
                 OrderItemReadResponse productResp = new OrderItemReadResponse();
-                // Assuming OrderItemReadModel has productId, productName, quantity, itemPrice
                 productResp.id = item.getProductId();
                 productResp.price = item.getPrice();  // This is unit price
 								productResp.quantity = item.getQuantity();

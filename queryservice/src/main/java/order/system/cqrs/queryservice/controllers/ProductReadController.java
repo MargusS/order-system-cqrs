@@ -8,29 +8,30 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import order.system.cqrs.queryservice.entities.ProductReadModel;
+import order.system.cqrs.queryservice.controllers.reponse.ProductReadResponse;
+import order.system.cqrs.queryservice.mapper.ProductMapper;
 import order.system.cqrs.queryservice.services.ProductReadService;
 
 @RestController
 @RequestMapping("/queries/products")
 public class ProductReadController {
 
-	private ProductReadService productReadService;
+	private final ProductReadService productReadService;
+	private final ProductMapper productMapper;
 
-	public ProductReadController(ProductReadService productReadService) {
+	public ProductReadController(ProductReadService productReadService, ProductMapper productMapper) {
 		this.productReadService = productReadService;
+		this.productMapper = productMapper;
 	}
 
 	@GetMapping
-	public Collection<ProductReadModel> getOrders() {
-		return productReadService.getAllProducts();
+	public ResponseEntity<Collection<ProductReadResponse>> getProducts() {
+		return ResponseEntity.ok(productReadService.getAllProducts().stream().map(productMapper::toResponse).toList());
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ProductReadModel> getOrderById(@PathVariable String id) {
-		return productReadService.getProductById(id)
-				.map(ResponseEntity::ok)
-				.orElse(ResponseEntity.notFound().build());
+	public ResponseEntity<ProductReadResponse> getOrderById(@PathVariable String id) {
+		return ResponseEntity.of(productReadService.getProductById(id).map(productMapper::toResponse));
 	}
 
 }
