@@ -8,7 +8,7 @@ spring:
       database: query_service_db
 
   kafka:
-    bootstrap-servers: localhost:9094
+    bootstrap-servers: localhost:9094,localhost:9095,localhost:9096
     consumer:
       group-id: query-service-group
       auto-offset-reset: earliest

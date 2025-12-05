@@ -10,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update 
+      ddl-auto: create 
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -22,10 +22,12 @@ spring:
   jpa.show-sql: false
 
   kafka:
-    bootstrap-servers: localhost:9094 
+    bootstrap-servers: localhost:9094,localhost:9095,localhost:9096
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: "all"
+      retries: 10
       properties:
         "[spring.json.type.mapping]": "product.created:order.system.cqrs.commandservice.events.ProductCreatedEvent,order.created:order.system.cqrs.commandservice.events.OrderCreatedEvent,product.price.changed:order.system.cqrs.commandservice.events.ProductPriceChangedEvent, product.deactivated:order.system.cqrs.commandservice.events.ProductDeactivatedEvent, order.confirmed:order.system.cqrs.commandservice.events.OrderConfirmedEvent, order.cancelled:order.system.cqrs.commandservice.events.OrderCancelledEvent"
     consumer:
