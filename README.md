@@ -124,7 +124,9 @@ Explore and test the endpoints using our ready-to-use Postman Collection.
 
 ## Author
 **Agustin Marani**
+
 *Software Engineer | Java & Cloud Architecture Enthusiast*
+
 <a href="https://www.linkedin.com/in/agustinmaranidev/">
   <img src="https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn">
 </a>
