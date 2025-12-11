@@ -1,0 +1,148 @@
+# ==========================================
+# COMMAND SERVICE (Write Side)
+# ==========================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: command-service
+  namespace: cqrs-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: command-service
+  template:
+    metadata:
+      labels:
+        app: command-service
+    spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: postgres:15-alpine
+          command: 
+            - 'sh'
+            - '-c'
+            - >
+              until pg_isready -h postgres -p 5432; do
+                echo "Waiting for PostgreSQL to be ready...";
+                sleep 2;
+              done;
+        - name: wait-for-kafka
+          image: busybox
+          command: 
+            - 'sh'
+            - '-c'
+            - >
+              until nc -z -v -w30 kafka-cluster 9092; do
+                echo "Waiting for Kafka...";
+                sleep 5;
+              done;
+      containers:
+        - name: command-service
+          image: command-service:1.0
+          imagePullPolicy: Never 
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-cluster:9092"
+            
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:postgresql://postgres:5432/command_service_db"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "margus"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "margus123"
+            
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms256m -Xmx512m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: command-service
+  namespace: cqrs-system
+spec:
+  type: LoadBalancer 
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+  selector:
+    app: command-service
+
+# ==========================================
+# QUERY SERVICE (Read Side)
+# ==========================================
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-service
+  namespace: cqrs-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: query-service
+  template:
+    metadata:
+      labels:
+        app: query-service
+    spec:
+      initContainers:
+      
+        - name: wait-for-mongodb
+          image: busybox
+          command: 
+            - 'sh'
+            - '-c'
+            - >
+              until nc -z -v -w30 mongodb 27017; do
+                echo "Waiting for MongoDB connection...";
+                sleep 2;
+              done;
+        - name: wait-for-kafka
+          image: busybox
+          command: 
+            - 'sh'
+            - '-c'
+            - >
+              until nc -z -v -w30 kafka-cluster 9092; do
+                echo "Waiting for Kafka...";
+                sleep 5;
+              done;
+      containers:
+        - name: query-service
+          image: query-service:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: "kafka-cluster:9092"
+            
+            - name: SPRING_DATA_MONGODB_URI
+              value: "mongodb://mongodb:27017/query_service_db"
+            
+            - name: SERVER_PORT
+              value: "8081"
+            
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xms256m -Xmx512m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: query-service
+  namespace: cqrs-system
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8081
+      targetPort: 8081
+      name: http
+  selector:
+    app: query-service
