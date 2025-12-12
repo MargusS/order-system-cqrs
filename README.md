@@ -15,6 +15,8 @@ A robust, cloud-native microservices architecture designed to demonstrate the im
 
 The system is split into two distinct microservices that communicate asynchronously via an **Apache Kafka HA Cluster** running on Kubernetes.
 
+![Architecture Diagram](./CQRS-Arch.jpg)
+
 ### 1. Command Service (Write Side)
 *   **Responsibility:** Handles high-throughput write operations and business logic validation.
 *   **Tech:** Java 21, Spring Boot, PostgreSQL (Relational).
